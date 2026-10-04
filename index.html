@@ -4,63 +4,75 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Botica — Café de especialidad</title>
+<meta name="description" content="Café de especialidad recetado con precisión de farmacia, en una antigua botica de San Telmo, Buenos Aires.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Young+Serif&family=Work+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700&family=DM+Sans:wght@400;500;700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="css/estilos.css">
 </head>
 <body>
 
-<header>
-  <nav class="contenedor nav" aria-label="Principal">
-    <a href="#" class="logo">
+<header class="barra">
+  <nav class="nav" aria-label="Principal">
+    <a href="#inicio" class="logo">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M9 2h6M10 2v4l-4 6v8a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2v-8l-4-6V2"/><path d="M6 14h12"/></svg>
       Botica
     </a>
     <ul>
-      <li><a href="#recetario">Recetario</a></li>
-      <li><a href="#visita">Reservar</a></li>
       <li><a href="#casa">La casa</a></li>
+      <li><a href="#recetario">Recetario</a></li>
       <li><a href="#galeria">Galería</a></li>
     </ul>
+    <a href="#visita" class="boton boton-chico">Reservar</a>
   </nav>
 </header>
 
-<main>
-  <div class="hero">
-    <div class="contenedor hero-grid">
-      <div class="hero-copy">
-        <h1>Café recetado con precisión de farmacia.</h1>
-        <p>Tostamos en pequeñas tandas y preparamos cada taza pesando, midiendo y cronometrando. En una antigua botica de San Telmo.</p>
+<main id="inicio">
+  <section class="hero">
+    <img class="hero-foto" src="img/hero-latte-art.jpg" alt="Barista vertiendo leche sobre un latte art" fetchpriority="high" decoding="async">
+    <div class="hero-velo" aria-hidden="true"></div>
+    <div class="hero-contenido">
+      <p class="estado" id="estado" aria-live="polite"><span class="punto" aria-hidden="true"></span><span id="estado-texto">San Telmo, Buenos Aires</span></p>
+      <h1>Café recetado con precisión de farmacia.</h1>
+      <p class="hero-texto">Tostamos en pequeñas tandas y preparamos cada taza pesando, midiendo y cronometrando. En una antigua botica de San Telmo.</p>
+      <div class="hero-acciones">
         <a href="#recetario" class="boton">Ver el recetario</a>
-      </div>
-      <div class="foto"><img src="img/hero-latte-art.jpg" alt="Barista vertiendo leche sobre un latte art" loading="eager" decoding="async"></div>
-    </div>
-  </div>
-  <div class="azulejos" aria-hidden="true"></div>
-
-  <section id="casa">
-    <div class="contenedor casa">
-      <div class="foto"><img src="img/local-interior.jpg" alt="Interior de la cafetería visto desde arriba, con mesas y estantes de madera" loading="lazy" decoding="async"></div>
-      <div>
-        <h2>Una farmacia de 1924, ahora llena de café</h2>
-        <p>Cuando encontramos el local, todavía conservaba los estantes de roble, los frascos de vidrio y el mostrador de mármol. Decidimos no tocar casi nada.</p>
-        <p>Donde antes se preparaban jarabes, hoy pesamos granos de Colombia, Etiopía y Brasil. Cada café del menú tiene su receta escrita: gramos, temperatura y tiempo de extracción. Si te interesa, el barista te la explica.</p>
-        <div class="datos">
-          <div><strong>1924</strong><span>Año de la botica original</span></div>
-          <div><strong>3</strong><span>Orígenes en rotación</span></div>
-          <div><strong>18 g</strong><span>Por cada espresso doble</span></div>
-        </div>
+        <a href="#visita" class="boton boton-claro">Reservar mesa</a>
       </div>
     </div>
   </section>
 
-  <section id="recetario" class="recetario">
+  <div class="cinta" aria-hidden="true">
+    <div class="cinta-pista">
+      <span>Colombia</span><span>Etiopía</span><span>Brasil</span><span>Tostado en el local</span><span>18 g por espresso doble</span>
+      <span>Colombia</span><span>Etiopía</span><span>Brasil</span><span>Tostado en el local</span><span>18 g por espresso doble</span>
+    </div>
+  </div>
+
+  <section id="casa" class="seccion">
     <div class="contenedor">
-      <div class="recetario-intro">
-        <h2>Recetario</h2>
-        <p>Cada preparación con su fórmula. Los precios incluyen el café o té del día; preguntá por los orígenes disponibles.</p>
+      <p class="etiqueta">La casa</p>
+      <h2>Una farmacia de 1924, ahora llena de café</h2>
+      <div class="bento">
+        <div class="tarjeta bento-foto">
+          <img src="img/local-interior.jpg" alt="Interior de la cafetería visto desde arriba, con mesas y estantes de madera" loading="lazy" decoding="async">
+        </div>
+        <div class="tarjeta bento-texto">
+          <p>Cuando encontramos el local, todavía conservaba los estantes de roble, los frascos de vidrio y el mostrador de mármol. Decidimos no tocar casi nada.</p>
+          <p>Donde antes se preparaban jarabes, hoy pesamos granos de Colombia, Etiopía y Brasil. Cada café del menú tiene su receta escrita: gramos, temperatura y tiempo de extracción. Si te interesa, el barista te la explica.</p>
+        </div>
+        <div class="tarjeta dato"><strong>1924</strong><span>Año de la botica original</span></div>
+        <div class="tarjeta dato"><strong>3</strong><span>Orígenes en rotación</span></div>
+        <div class="tarjeta dato dato-acento"><strong>18 g</strong><span>Por cada espresso doble</span></div>
       </div>
+    </div>
+  </section>
+
+  <section id="recetario" class="seccion seccion-oscura">
+    <div class="contenedor">
+      <p class="etiqueta">Recetario</p>
+      <h2>Cada preparación con su fórmula</h2>
+      <p class="intro">Los precios incluyen el café o té del día. Preguntá por los orígenes disponibles.</p>
       <div class="pestanas" role="tablist" aria-label="Categorías del menú">
         <button role="tab" aria-selected="true" data-cat="cafe">Café</button>
         <button role="tab" aria-selected="false" data-cat="frio">Fríos</button>
@@ -70,8 +82,9 @@
     </div>
   </section>
 
-  <section id="galeria">
+  <section id="galeria" class="seccion">
     <div class="contenedor">
+      <p class="etiqueta">Galería</p>
       <h2>Un día en la botica</h2>
       <div class="galeria">
         <div class="foto g1"><img src="img/granos-tostado.jpg" alt="Granos de café en una tostadora" loading="lazy" decoding="async"></div>
@@ -82,11 +95,12 @@
     </div>
   </section>
 
-  <section id="visita">
+  <section id="visita" class="seccion">
     <div class="contenedor visita">
-      <div>
-        <h2>Visitanos</h2>
-        <p>Defensa 1180, San Telmo, Buenos Aires.<br>A dos cuadras de Plaza Dorrego.</p>
+      <div class="visita-info">
+        <p class="etiqueta">Visitanos</p>
+        <h2>Defensa 1180, San Telmo</h2>
+        <p>Buenos Aires. A dos cuadras de Plaza Dorrego.</p>
         <ul class="horarios">
           <li><span>Lunes a viernes</span><span>8 a 19 h</span></li>
           <li><span>Sábados</span><span>9 a 20 h</span></li>
@@ -94,21 +108,21 @@
         </ul>
         <p>Los domingos hay feria en la calle: conviene reservar mesa.</p>
       </div>
-      <form id="reserva" novalidate>
-        <h3 style="font-family:var(--serif);font-weight:400;font-size:1.5rem;margin:0">Reservar una mesa</h3>
-        <label>Nombre <input type="text" name="nombre" required autocomplete="name"></label>
+      <form id="reserva" class="tarjeta" novalidate>
+        <h3>Reservar una mesa</h3>
+        <label for="nombre">Nombre <input id="nombre" type="text" name="nombre" required autocomplete="name"></label>
         <div class="fila">
-          <label>Día <input type="date" name="dia" required></label>
-          <label>Hora
-            <select name="hora" required>
+          <label for="dia">Día <input id="dia" type="date" name="dia" required></label>
+          <label for="hora">Hora
+            <select id="hora" name="hora" required>
               <option value="">Elegí</option>
               <option>09:00</option><option>10:30</option><option>12:00</option>
               <option>14:00</option><option>16:00</option><option>17:30</option>
             </select>
           </label>
         </div>
-        <label>Personas
-          <select name="personas"><option>1</option><option selected>2</option><option>3</option><option>4</option><option>5 o más</option></select>
+        <label for="personas">Personas
+          <select id="personas" name="personas"><option>1</option><option selected>2</option><option>3</option><option>4</option><option>5 o más</option></select>
         </label>
         <button type="submit" class="boton">Reservar mesa</button>
         <div class="confirmacion" id="confirmacion" role="status"></div>
@@ -117,10 +131,13 @@
   </section>
 </main>
 
-<footer>
+<footer class="pie">
   <div class="contenedor">
-    <span>Botica, café de especialidad. Proyecto conceptual.</span>
-    <span>Fotografías: <a href="https://www.pexels.com">Pexels</a> (fotos <a href="https://www.pexels.com/photo/302899/">1</a>, <a href="https://www.pexels.com/photo/2253643/">2</a>, <a href="https://www.pexels.com/photo/894695/">3</a>, <a href="https://www.pexels.com/photo/3892469/">4</a>, <a href="https://www.pexels.com/photo/3020919/">5</a>, <a href="https://www.pexels.com/photo/6205506/">6</a>)</span>
+    <p class="pie-marca" aria-hidden="true">Botica</p>
+    <div class="pie-fila">
+      <span>Botica, café de especialidad. Proyecto conceptual.</span>
+      <span>Fotografías: <a href="https://www.pexels.com">Pexels</a> (fotos <a href="https://www.pexels.com/photo/302899/">1</a>, <a href="https://www.pexels.com/photo/2253643/">2</a>, <a href="https://www.pexels.com/photo/894695/">3</a>, <a href="https://www.pexels.com/photo/3892469/">4</a>, <a href="https://www.pexels.com/photo/3020919/">5</a>, <a href="https://www.pexels.com/photo/6205506/">6</a>)</span>
+    </div>
   </div>
 </footer>
 

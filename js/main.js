@@ -21,11 +21,12 @@ const precio = n => "$ " + n.toLocaleString("es-AR");
 const cont = document.getElementById("recetas");
 function mostrar(cat) {
   cont.innerHTML = menu[cat].map(r => `
-    <article class="receta">
-      <h3>${r.n}</h3>
-      <p>${r.d}</p>
-      <div class="pie"><span class="dosis">${r.dosis}</span><span class="precio">${precio(r.p)}</span></div>
-    </article>`).join("");
+      <article class="receta">
+        <span class="dosis">${r.dosis}</span>
+        <h3>${r.n}</h3>
+        <p>${r.d}</p>
+        <div class="pie"><span class="precio">${precio(r.p)}</span></div>
+      </article>`).join("");
 }
 document.querySelectorAll(".pestanas button").forEach(b => {
   b.addEventListener("click", () => {
@@ -53,3 +54,18 @@ form.addEventListener("submit", e => {
   conf.classList.add("visible");
   form.reset();
 });
+
+// Estado "abierto ahora" según el horario de Buenos Aires
+const horarios = { 0: [10, 18], 6: [9, 20] };
+for (let d = 1; d <= 5; d++) horarios[d] = [8, 19];
+function actualizarEstado() {
+  const ahora = new Date(new Date().toLocaleString("en-US", { timeZone: "America/Argentina/Buenos_Aires" }));
+  const [abre, cierra] = horarios[ahora.getDay()];
+  const hora = ahora.getHours() + ahora.getMinutes() / 60;
+  const abierto = hora >= abre && hora < cierra;
+  document.getElementById("estado").classList.toggle("abierto", abierto);
+  document.getElementById("estado-texto").textContent = abierto
+    ? `Abierto ahora · hasta las ${cierra} h`
+    : `Cerrado · abre ${hora < abre ? "hoy" : "mañana"} a las ${hora < abre ? abre : horarios[(ahora.getDay() + 1) % 7][0]} h`;
+}
+actualizarEstado();
