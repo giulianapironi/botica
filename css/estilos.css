@@ -173,3 +173,44 @@ input, select { font: inherit; padding: .8rem 1rem; border: 1px solid var(--line
 .pie { padding: 4rem 0 2.5rem; overflow: hidden; }
 .pie-marca { font-family: var(--serif); font-weight: 700; font-size: clamp(5rem, 22vw, 17rem); line-height: .8; letter-spacing: -.05em; margin: 0 0 2.5rem; color: var(--marca-pie); text-align: center; }
 .pie-fila { display: flex; justify-content: space-between; gap: 1rem; flex-wrap: wrap; font-size: .9rem; color: var(--texto-suave); border-top: 1px solid var(--linea); padding-top: 1.5rem; }
+
+/* Animaciones (solo si el sistema no pide reducir movimiento) */
+.progreso { position: fixed; top: 0; left: 0; right: 0; height: 3px; z-index: 30; background: var(--bronce); transform-origin: left; transform: scaleX(var(--p, 0)); pointer-events: none; }
+.cinta:hover .cinta-pista { animation-play-state: paused; }
+@media (prefers-reduced-motion: no-preference) {
+  /* Aparición al hacer scroll */
+  html.anim [data-reveal] { opacity: 0; transform: translateY(32px); transition: opacity .9s cubic-bezier(.2,.7,.2,1) var(--d, 0s), transform .9s cubic-bezier(.2,.7,.2,1) var(--d, 0s); }
+  html.anim [data-reveal].visto { opacity: 1; transform: none; }
+  html.anim .bento-foto[data-reveal] img, html.anim .foto[data-reveal] img { transform: scale(1.22); transition: transform 1.6s cubic-bezier(.2,.7,.2,1) var(--d, 0s); }
+  html.anim .bento-foto[data-reveal].visto img, html.anim .foto[data-reveal].visto img { transform: scale(1); }
+  html.anim .foto[data-reveal].visto:hover img { transform: scale(1.06); transition-delay: 0s; transition-duration: .8s; }
+
+  /* Titular del hero palabra por palabra */
+  .hero h1.dividido { animation: none; }
+  .pal { display: inline-block; overflow: hidden; vertical-align: top; padding-bottom: .1em; margin-bottom: -.1em; }
+  .pal > span { display: inline-block; transform: translateY(110%); animation: palabra .9s cubic-bezier(.2,.7,.2,1) forwards; animation-delay: calc(.15s + var(--i) * .09s); }
+  @keyframes palabra { to { transform: none; } }
+
+  /* Hero: zoom de entrada y parallax */
+  html.anim .hero-foto { scale: 1.1; animation: zoom-hero 2.2s cubic-bezier(.2,.7,.2,1) both; will-change: translate; }
+  @keyframes zoom-hero { from { scale: 1.28; } to { scale: 1.1; } }
+  .estado.abierto .punto { animation: pulso 2s ease-out infinite; }
+  @keyframes pulso { 0% { box-shadow: 0 0 0 0 rgba(127,211,154,.55); } 70%, 100% { box-shadow: 0 0 0 9px rgba(127,211,154,0); } }
+
+  /* Barra que se compacta al bajar */
+  .nav { transition: width .4s cubic-bezier(.2,.7,.2,1), padding .4s ease, background-color .4s ease; }
+  .barra.compacta .nav { width: min(600px, 100% - 1.5rem); padding: .4rem .45rem .4rem 1rem; background: rgba(20, 38, 25, .88); }
+
+  /* Recetas: entrada escalonada al cambiar de pestaña */
+  .receta { animation: receta-entra .6s cubic-bezier(.2,.7,.2,1) both; animation-delay: calc(var(--i, 0) * 70ms); }
+  @keyframes receta-entra { from { opacity: 0; transform: translateY(22px) scale(.97); } to { opacity: 1; transform: none; } }
+
+  /* Detalles */
+  .confirmacion.visible { animation: pop .5s cubic-bezier(.3,1.4,.5,1); }
+  @keyframes pop { from { opacity: 0; transform: scale(.94) translateY(8px); } to { opacity: 1; transform: none; } }
+  .boton:active { transform: scale(.97); }
+  .logo svg { transition: transform .5s cubic-bezier(.3,1.4,.5,1); }
+  .logo:hover svg { transform: rotate(-14deg) scale(1.15); }
+  .horarios li { transition: padding-left .25s ease, color .25s ease; }
+  .horarios li:hover { padding-left: .5rem; }
+}
