@@ -53,7 +53,7 @@ const cont = document.getElementById("recetas");
 function mostrar(cat, animar) {
   cont.innerHTML = menu[cat].map((r, i) => `
       <li class="formula${animar ? " nueva" : ""}" style="--i:${i}">
-        ${iconos[r.ic]()}
+        ${window.Botica3D && Botica3D.disponible ? `<canvas class="f-3d" data-ic="${r.ic}" width="360" height="360" role="img" aria-label="${r.n}"></canvas>` : iconos[r.ic]()}
         <div>
           <p class="f-num">N.º ${String(i + 1).padStart(2, "0")}</p>
           <h3 class="f-nombre">${r.n}</h3>
@@ -62,6 +62,7 @@ function mostrar(cat, animar) {
         </div>
         <span class="f-precio">${precio(r.p)}</span>
       </li>`).join("");
+  if (window.Botica3D && Botica3D.disponible) Botica3D.montar(cont);
 }
 document.querySelectorAll(".pestanas button").forEach(b => {
   b.addEventListener("click", () => {
