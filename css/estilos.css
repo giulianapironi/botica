@@ -96,7 +96,7 @@ p { margin: 0 0 1rem; }
 .hero-disco { display: none; }
 .hero.con-3d .hero-disco { display: block; position: absolute; z-index: 0; right: clamp(2rem, 7vw, 7rem); top: 6.4rem; width: min(36vw, 520px); aspect-ratio: 1; border-radius: 50%; background: var(--crema); }
 .hero.con-3d .hero-foto { display: none; }
-.hero-3d { position: absolute; inset: 0; width: 100%; height: 100%; z-index: 4; pointer-events: none; }
+.hero-3d { position: fixed; inset: 0; width: 100%; height: 100%; z-index: 30; pointer-events: none; }
 .hero.con-3d .s-hero { right: auto; left: clamp(1rem, 4vw, 4rem); top: 7.5rem; }
 @media (max-width: 800px) {
   .hero.con-3d .hero-disco { width: 47vw; right: 3vw; top: 4.9rem; }

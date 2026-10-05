@@ -1,5 +1,5 @@
-// Hero: vaso para llevar de Botica en 3D (Three.js).
-// Entra rodando desde la izquierda, se levanta con un rebote y después gira con el scroll.
+// Escenario fijo: un vaso para llevar de Botica en 3D (Three.js).
+// Entra rodando en el hero y después acompaña el scroll, cambiando de lugar y de pose en cada sección.
 (function () {
   const THREE = window.THREE;
   const hero = document.querySelector(".hero");
@@ -15,7 +15,7 @@
   lienzo.className = "hero-3d";
   lienzo.setAttribute("aria-hidden", "true");
   hero.classList.add("con-3d");
-  hero.insertBefore(lienzo, hero.querySelector(".titanes"));
+  document.body.appendChild(lienzo);
   renderer.setClearColor(0x000000, 0);
 
   const reducir = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
@@ -117,69 +117,124 @@
   const sombra = new THREE.Mesh(new THREE.PlaneGeometry(1, .25), new THREE.MeshBasicMaterial({ map: sombraTex, transparent: true, depthWrite: false }));
   escena.add(sombra);
 
-  // ---------- Tamaño y posición ----------
-  let escala = 1, destX = 0, destY = 0, anchoVisible = 1, alto = 1, ancho = 1;
+  // ---------- Poses por sección ----------
+  // x, y: posición en la ventana (-1 a 1). h: alto del vaso como fracción del alto de la ventana.
+  // tz: inclinación lateral, tx: inclinación hacia la cámara.
+  const SECCIONES = ["#casa", "#recetario", "#galeria", "#visita"];
+  const pose = (x, y, h, tz = 0, tx = .16) => ({ x, y, h, tz, tx });
+  const POSES_ESCRITORIO = [pose(.9, -.5, .36, -.3), pose(1.03, -.02, .3, .32), pose(-1.02, -.05, .34, .28), pose(-.06, -.7, .26, -.2)];
+  const POSES_MOVIL = [pose(.93, -.88, .17, -.25), pose(.93, -.88, .17, .25), pose(-.93, -.88, .17, .25), pose(.93, -.88, .17, -.2)];
+
+  let escala = 1, anchoVisible = 1, alto = 1, ancho = 1, anclas = [], poses = [], heroPose = null, maxScroll = 1;
+  const suave = t => { t = Math.min(Math.max(t, 0), 1); return t * t * (3 - 2 * t); };
+  const lerp = (a, b, w) => a + (b - a) * w;
+
   function medir() {
-    const h = hero.getBoundingClientRect();
-    ancho = h.width; alto = h.height;
-    renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
+    ancho = window.innerWidth; alto = window.innerHeight;
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 1.5));
     renderer.setSize(ancho, alto, false);
     camara.aspect = ancho / alto; camara.updateProjectionMatrix();
     anchoVisible = ALTO_VISIBLE * camara.aspect;
-    const d = disco.getBoundingClientRect();
-    const cx = (d.left + d.width / 2 - h.left) / ancho * 2 - 1;
-    const cy = -((d.top + d.height / 2 - h.top) / alto * 2 - 1);
-    destX = cx * anchoVisible / 2; destY = cy * ALTO_VISIBLE / 2;
-    escala = (d.width * 0.98 / alto * ALTO_VISIBLE) / 2.45;
-    pivote.scale.setScalar(escala);
+    maxScroll = Math.max(document.documentElement.scrollHeight - alto, 1);
+    const movil = ancho < 800;
+    poses = movil ? POSES_MOVIL : POSES_ESCRITORIO;
+    // el vaso nace sobre el disco del hero
+    // se mide sin transformaciones (el disco entra con una animación de escala)
+    const dAncho = disco.offsetWidth, dAlto = disco.offsetHeight;
+    const heroTop = hero.getBoundingClientRect().top + window.scrollY;
+    heroPose = {
+      cx: (hero.getBoundingClientRect().left + disco.offsetLeft + dAncho / 2) / ancho * 2 - 1,
+      cyPagina: heroTop + disco.offsetTop + dAlto / 2,
+      h: dAncho * .98 / alto
+    };
+    // scroll en el que cada sección queda centrada
+    anclas = [0];
+    SECCIONES.forEach(sel => {
+      const el = document.querySelector(sel); if (!el) return;
+      const r = el.getBoundingClientRect();
+      const centro = r.top + window.scrollY + r.height / 2;
+      const s = Math.min(Math.max(centro - alto / 2, 0), maxScroll);
+      anclas.push(Math.max(s, anclas[anclas.length - 1] + 1));
+    });
   }
   medir();
   window.addEventListener("resize", medir);
+  window.addEventListener("load", medir);
+
+  function poseEn(s) {
+    const desde = {
+      x: heroPose.cx, y: -((heroPose.cyPagina - s) / alto * 2 - 1), h: heroPose.h, tz: 0, tx: .16
+    };
+    if (reducir) return desde;
+    const n = Math.min(anclas.length, poses.length + 1);
+    if (n < 2) return desde;
+    let i = n - 2;
+    for (let k = 0; k < n - 1; k++) if (s < anclas[k + 1]) { i = k; break; }
+    const a = i === 0 ? desde : poses[i - 1];
+    const b = poses[i];
+    const t = (s - anclas[i]) / (anclas[i + 1] - anclas[i]);
+    const w = suave((t - .16) / .68); // el vaso se queda un rato en cada sección y luego viaja
+    return { x: lerp(a.x, b.x, w), y: lerp(a.y, b.y, w), h: lerp(a.h, b.h, w), tz: lerp(a.tz, b.tz, w), tx: lerp(a.tx, b.tx, w), w };
+  }
 
   // ---------- Animación ----------
   const rodar = 1.7, enderezar = .95, retraso = .35;
   const suaviza = t => 1 - Math.pow(1 - t, 3);
   const rebote = t => { const c1 = 2.2, c3 = c1 + 1; return 1 + c3 * Math.pow(t - 1, 3) + c1 * Math.pow(t - 1, 2); };
   const inicio = performance.now();
-  let visible = true;
-  if ("IntersectionObserver" in window) new IntersectionObserver(es => { visible = es[0].isIntersecting; }).observe(hero);
+  let compensa = null, xPrev = null, tPrev = inicio, inclinacion = 0;
 
   function cuadro(ahora) {
     requestAnimationFrame(cuadro);
-    if (!visible || document.hidden) return;
+    if (document.hidden) return;
     const t = (ahora - inicio) / 1000 - retraso;
+    const dt = Math.min((ahora - tPrev) / 1000, .1); tPrev = ahora;
     const yScroll = window.scrollY;
-    const p = Math.min(yScroll / Math.max(alto, 1), 1);
-    const empuje = yScroll * .0062;
+    const P = poseEn(yScroll);
+    escala = (P.h * ALTO_VISIBLE) / 2.45;
     const radio = .75 * escala;
+    const destX = P.x * anchoVisible / 2, destY = P.y * ALTO_VISIBLE / 2;
     const xIni = -(anchoVisible / 2 + 2.2 * escala);
-    let x = destX, y = destY, giro = 0, caida = -Math.PI / 2, salto = 0;
+    const introActiva = !reducir && t < rodar + enderezar;
+    let x = destX, y = destY, caida = 0, salto = 0, giro;
 
-    if (reducir) {
-      caida = 0; giro = .6;
-    } else if (t < rodar) {
-      const k = suaviza(Math.max(t, 0) / rodar);
-      x = xIni + (destX - xIni) * k;
-      giro = -(x - xIni) / radio;
-      y = destY - .55 * escala;
+    // velocidad horizontal para inclinar el vaso al viajar
+    const vx = xPrev === null ? 0 : (x - xPrev) / Math.max(dt, .001); xPrev = x;
+    inclinacion += ((-vx * .05) - inclinacion) * Math.min(dt * 6, 1);
+    const inclina_extra = Math.max(-.5, Math.min(.5, inclinacion));
+
+    const giroNormal = (reducir ? .6 : -destX / radio + yScroll * .0042 + Math.max(t, 0) * .3);
+
+    if (introActiva) {
+      if (t < rodar) {
+        const k = suaviza(Math.max(t, 0) / rodar);
+        x = xIni + (destX - xIni) * k;
+        giro = -(x - xIni) / radio;
+        y = destY - .55 * escala; caida = -Math.PI / 2;
+      } else {
+        const u = Math.min((t - rodar) / enderezar, 1);
+        const giroFinal = -(destX - xIni) / radio;
+        giro = giroFinal + suaviza(u) * 1.5;
+        caida = -Math.PI / 2 * (1 - Math.min(rebote(u), 1.25));
+        salto = Math.sin(u * Math.PI) * .45 * escala;
+        y = destY - .55 * escala * (1 - suaviza(u)) + salto;
+      }
+      compensa = null;
     } else {
-      const u = Math.min((t - rodar) / enderezar, 1);
-      const giroFinal = -(destX - xIni) / radio;
-      giro = giroFinal + suaviza(u) * 1.5 + Math.max(t - rodar - enderezar, 0) * .45;
-      caida = -Math.PI / 2 * (1 - Math.min(rebote(u), 1.25));
-      salto = Math.sin(u * Math.PI) * .45 * escala;
-      y = destY - .55 * escala * (1 - suaviza(u)) + salto;
+      if (compensa === null) compensa = reducir ? 0 : (-(destX - xIni) / radio + 1.5) - giroNormal;
+      giro = giroNormal + compensa;
+      y += Math.sin(Math.max(t, 0) * 1.7) * .04 * escala;
     }
-    const flota = t > rodar + enderezar ? Math.sin((t - rodar - enderezar) * 1.7) * .05 * escala : 0;
-    pivote.position.set(x + p * .5 * escala, y + flota - p * .25 * escala, 0);
-    pivote.scale.setScalar(escala * (1 - p * .12));
-    inclina.rotation.z = caida - p * .4;
-    inclina.rotation.x = .16;
-    gira.rotation.y = giro + empuje;
 
-    sombra.position.set(x, destY - 1.32 * escala - salto * .15, -.2);
-    sombra.scale.setScalar(escala * 2.2 * (1 - Math.min(salto / (.9 * escala), .5) * .6) * (t < rodar && !reducir ? Math.max(.0, suaviza(Math.max(t, 0) / rodar)) : 1));
-    sombra.visible = !(t < rodar && !reducir) || t > rodar * .6;
+    pivote.position.set(x, y, 0);
+    pivote.scale.setScalar(escala);
+    inclina.rotation.z = caida + (introActiva ? 0 : P.tz + inclina_extra);
+    inclina.rotation.x = P.tx;
+    gira.rotation.y = giro;
+
+    sombra.position.set(x, y - 1.32 * escala - salto * .15, -.2);
+    sombra.scale.setScalar(escala * 2.2);
+    sombra.visible = !(introActiva && t < rodar * .6);
     renderer.render(escena, camara);
   }
   requestAnimationFrame(cuadro);
