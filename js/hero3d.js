@@ -22,6 +22,7 @@
     const entrar = () => {
       if (hecho || !i.classList.contains("espera") || i.classList.contains("abierto")) return;
       i.classList.add("abierto");
+      if (window.Sonido) { Sonido.activar(); Sonido.pop(); Sonido.siseo(1.2); setTimeout(() => Sonido.ola(), 550); setTimeout(() => Sonido.aterriza(), 1750); }
       if (onda) { onda.style.left = "50%"; onda.style.top = "50%"; onda.classList.add("crece"); }
       setTimeout(() => { html.classList.remove("intro-pausa"); i.style.transition = "clip-path .9s cubic-bezier(.65,0,.25,1)"; i.style.clipPath = "circle(0px at 50% 50%)"; }, 800);
       setTimeout(terminarYa, 1800);
@@ -221,7 +222,11 @@
   if (!intro) { saltar(); }
   else {
     botonSaltar && botonSaltar.addEventListener("click", e => { e.stopPropagation(); saltar(); });
-    const abrir = () => { if (fase === "espera") { pasar("abriendo"); intro.classList.add("abierto"); } };
+    const abrir = () => {
+      if (fase !== "espera") return;
+      pasar("abriendo"); intro.classList.add("abierto");
+      if (window.Sonido) { Sonido.activar(); setTimeout(() => Sonido.pop(), 120); Sonido.siseo(1.5); }
+    };
     intro.addEventListener("click", abrir);
     botonAbrir && botonAbrir.addEventListener("click", e => { e.stopPropagation(); abrir(); });
     window.addEventListener("keydown", e => { if ((e.key === "Enter" || e.key === " ") && fase === "espera") { e.preventDefault(); abrir(); } });
@@ -319,6 +324,7 @@
       emitirVapor(x, y, ahora, dt);
       if (!ondaLista && tf > .55 && onda) {
         ondaLista = true;
+        if (window.Sonido) Sonido.ola();
         const px = (x / (anchoVisible / 2) + 1) / 2 * ancho, py = (1 - (y / (ALTO_VISIBLE / 2) + 1) / 2) * alto;
         onda.style.left = px + "px"; onda.style.top = py + "px"; onda.classList.add("crece");
       }
@@ -341,7 +347,7 @@
         intro.style.transition = `clip-path ${T.viaje * .85}s cubic-bezier(.65,0,.25,1)`;
         intro.style.clipPath = `circle(0px at ${px}px ${py}px)`;
       }
-      if (tf >= T.viaje) terminar();
+      if (tf >= T.viaje) { if (window.Sonido) Sonido.aterriza(); terminar(); }
     } else if (fase === "listo") {
       if (!reducir) { giro += velGiro * dt; y += Math.sin(ahora / 1000 * 1.7) * .04 * escala; }
       const k = Math.min((ahora - tapaVuelta) / 450, 1);

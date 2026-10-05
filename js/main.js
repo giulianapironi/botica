@@ -93,6 +93,7 @@ form.addEventListener("submit", e => {
   const texto = document.createElement("span");
   texto.textContent = `Mesa para ${personas.value} el ${fecha} a las ${hora.value}. Te esperamos, ${nombre.value.trim()}.`;
   conf.append(sello, texto);
+  if (window.Sonido) Sonido.sello();
   form.reset();
 });
 
@@ -172,3 +173,9 @@ setTimeout(() => {
     const i = document.getElementById("intro"); if (i) i.remove();
   }
 }, 4000);
+
+// Clic suave en botones y pestañas
+document.addEventListener("click", e => {
+  if (!window.Sonido || e.target.closest("#intro, .sonido-btn")) return;
+  if (e.target.closest(".boton, .pildora, .pestanas button, .cab nav a")) Sonido.tick();
+});

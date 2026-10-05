@@ -1,0 +1,15 @@
+# Botica es un sitio estático: no necesita comando de build.
+[build]
+  publish = "."
+
+# Los archivos HTML, CSS y JS se revalidan siempre, así los cambios llegan a los celulares sin quedarse con una versión vieja.
+[[headers]]
+  for = "/*"
+  [headers.values]
+    X-Content-Type-Options = "nosniff"
+    Referrer-Policy = "strict-origin-when-cross-origin"
+
+[[headers]]
+  for = "/img/*"
+  [headers.values]
+    Cache-Control = "public, max-age=604800"
