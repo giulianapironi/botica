@@ -21,12 +21,14 @@ const precio = n => "$ " + n.toLocaleString("es-AR");
 const cont = document.getElementById("recetas");
 function mostrar(cat) {
   cont.innerHTML = menu[cat].map((r, i) => `
-      <article class="receta" style="--i:${i}">
-        <span class="dosis">${r.dosis}</span>
-        <h3>${r.n}</h3>
-        <p>${r.d}</p>
-        <div class="pie"><span class="precio">${precio(r.p)}</span></div>
-      </article>`).join("");
+      <li class="formula" style="--i:${i}">
+        <span class="f-num">${String(i + 1).padStart(2, "0")}</span>
+        <div>
+          <div class="f-linea"><h3>${r.n}</h3><span class="f-precio">${precio(r.p)}</span></div>
+          <p class="f-desc">${r.d}</p>
+          <p class="f-dosis">Dosis: ${r.dosis}</p>
+        </div>
+      </li>`).join("");
 }
 document.querySelectorAll(".pestanas button").forEach(b => {
   b.addEventListener("click", () => {
@@ -44,14 +46,19 @@ form.dia.min = hoy;
 form.addEventListener("submit", e => {
   e.preventDefault();
   const { nombre, dia, hora, personas } = form;
+  conf.classList.add("visible");
   if (!nombre.value.trim() || !dia.value || !hora.value) {
     conf.textContent = "Completá nombre, día y hora para reservar.";
-    conf.classList.add("visible");
     return;
   }
   const fecha = new Date(dia.value + "T12:00").toLocaleDateString("es-AR", { weekday: "long", day: "numeric", month: "long" });
-  conf.textContent = `Mesa reservada para ${personas.value} el ${fecha} a las ${hora.value}. Te esperamos, ${nombre.value.trim()}.`;
-  conf.classList.add("visible");
+  conf.innerHTML = "";
+  const sello = document.createElement("span");
+  sello.className = "sello";
+  sello.textContent = "Reservada";
+  const texto = document.createElement("span");
+  texto.textContent = `Mesa para ${personas.value} el ${fecha} a las ${hora.value}. Te esperamos, ${nombre.value.trim()}.`;
+  conf.append(sello, texto);
   form.reset();
 });
 
@@ -70,63 +77,21 @@ function actualizarEstado() {
 }
 actualizarEstado();
 
-// Animaciones (se omiten si el sistema pide reducir movimiento)
-const conMovimiento = window.matchMedia("(prefers-reduced-motion: no-preference)").matches;
-const barra = document.querySelector(".barra");
-const progreso = document.createElement("div");
-progreso.className = "progreso";
-progreso.setAttribute("aria-hidden", "true");
-document.body.prepend(progreso);
-const heroFoto = document.querySelector(".hero-foto");
-
-let esperando = false;
-function alScrollear() {
-  const y = window.scrollY;
-  const total = document.documentElement.scrollHeight - window.innerHeight;
-  progreso.style.setProperty("--p", total > 0 ? Math.min(y / total, 1) : 0);
-  barra.classList.toggle("compacta", y > 60);
-  if (conMovimiento && heroFoto && y < window.innerHeight) heroFoto.style.translate = `0 ${y * 0.04}px`;
-  esperando = false;
-}
-window.addEventListener("scroll", () => { if (!esperando) { esperando = true; requestAnimationFrame(alScrollear); } }, { passive: true });
-alScrollear();
-
-if (conMovimiento && "IntersectionObserver" in window) {
+// Entrada al hacer scroll (se omite si el sistema pide reducir movimiento)
+if (window.matchMedia("(prefers-reduced-motion: no-preference)").matches && "IntersectionObserver" in window) {
   document.documentElement.classList.add("anim");
-
-  // Titular del hero palabra por palabra
-  const h1 = document.querySelector(".hero h1");
-  const texto = h1.textContent.trim();
-  h1.setAttribute("aria-label", texto);
-  h1.classList.add("dividido");
-  h1.innerHTML = texto.split(" ").map((p, i) => `<span class="pal" aria-hidden="true"><span style="--i:${i}">${p}</span></span>`).join(" ");
-
-  // Elementos que aparecen al entrar en pantalla
-  const grupos = ".etiqueta, .seccion h2, .intro, .pestanas, .bento > *, .galeria > *, .visita-info > *, .visita form, .horarios li";
+  const grupos = ".cab-seccion, .lamina, .casa-texto > *, .ficha > div, .galeria > *, .visita-info > *, .talonario";
   const visibles = new IntersectionObserver(entradas => {
     entradas.forEach(e => {
       if (!e.isIntersecting) return;
       e.target.classList.add("visto");
       visibles.unobserve(e.target);
-      if (e.target.classList.contains("dato")) contar(e.target.querySelector("strong"));
     });
-  }, { threshold: 0.15, rootMargin: "0px 0px -6% 0px" });
+  }, { threshold: 0.12, rootMargin: "0px 0px -6% 0px" });
   document.querySelectorAll(grupos).forEach(el => {
     const hermanos = [...el.parentElement.children].filter(h => h.matches(grupos));
     el.dataset.reveal = "";
-    el.style.setProperty("--d", `${hermanos.indexOf(el) * 0.09}s`);
+    el.style.setProperty("--d", `${hermanos.indexOf(el) * 0.08}s`);
     visibles.observe(el);
   });
-
-  // Contadores en los datos de "La casa"
-  function contar(el) {
-    const m = el.textContent.match(/^(\d+)(.*)$/);
-    if (!m) return;
-    const meta = Number(m[1]), resto = m[2], inicio = performance.now(), dur = 1400;
-    (function paso(t) {
-      const k = Math.min((t - inicio) / dur, 1);
-      el.textContent = Math.round(meta * (1 - Math.pow(1 - k, 4))) + resto;
-      if (k < 1) requestAnimationFrame(paso);
-    })(inicio);
-  }
 }

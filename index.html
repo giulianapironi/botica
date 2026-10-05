@@ -7,109 +7,125 @@
 <meta name="description" content="Café de especialidad recetado con precisión de farmacia, en una antigua botica de San Telmo, Buenos Aires.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700&family=DM+Sans:wght@400;500;700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Old+Standard+TT:ital,wght@0,400;0,700;1,400&family=Work+Sans:wght@400;500;600&family=Courier+Prime:wght@400;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="css/estilos.css">
 </head>
 <body>
 
-<header class="barra">
-  <nav class="nav" aria-label="Principal">
-    <a href="#inicio" class="logo">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M9 2h6M10 2v4l-4 6v8a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2v-8l-4-6V2"/><path d="M6 14h12"/></svg>
-      Botica
-    </a>
+<div class="franja-sup">
+  <div class="contenedor franja-fila">
+    <span class="estado" id="estado" aria-live="polite"><span class="punto" aria-hidden="true"></span><span id="estado-texto">San Telmo, Buenos Aires</span></span>
+    <span class="franja-dir">Defensa 1180 · San Telmo</span>
+  </div>
+</div>
+
+<header class="cabecera">
+  <nav class="contenedor nav" aria-label="Principal">
+    <a href="#inicio" class="logo">Botica<small>Est. 1924</small></a>
     <ul>
-      <li><a href="#casa">La casa</a></li>
       <li><a href="#recetario">Recetario</a></li>
+      <li><a href="#casa">La casa</a></li>
       <li><a href="#galeria">Galería</a></li>
+      <li><a href="#visita" class="nav-reservar">Reservar</a></li>
     </ul>
-    <a href="#visita" class="boton boton-chico">Reservar</a>
   </nav>
 </header>
 
 <main id="inicio">
-  <section class="hero">
-    <img class="hero-foto" src="img/hero-latte-art.jpg" alt="Barista vertiendo leche sobre un latte art" fetchpriority="high" decoding="async">
-    <div class="hero-velo" aria-hidden="true"></div>
-    <div class="hero-contenido">
-      <p class="estado" id="estado" aria-live="polite"><span class="punto" aria-hidden="true"></span><span id="estado-texto">San Telmo, Buenos Aires</span></p>
-      <h1>Café recetado con precisión de farmacia.</h1>
-      <p class="hero-texto">Tostamos en pequeñas tandas y preparamos cada taza pesando, midiendo y cronometrando. En una antigua botica de San Telmo.</p>
+  <section class="hero contenedor">
+    <div class="hero-texto">
+      <p class="rp" aria-hidden="true">℞</p>
+      <h1>Café <em>recetado</em> con precisión de farmacia.</h1>
+      <p class="hero-bajada">Tostamos en pequeñas tandas y preparamos cada taza pesando, midiendo y cronometrando. En una antigua botica de San Telmo.</p>
       <div class="hero-acciones">
         <a href="#recetario" class="boton">Ver el recetario</a>
-        <a href="#visita" class="boton boton-claro">Reservar mesa</a>
+        <a href="#visita" class="enlace">Reservar una mesa</a>
       </div>
     </div>
+    <figure class="hero-fig">
+      <img src="img/hero-latte-art.jpg" alt="Barista vertiendo leche sobre un latte art" fetchpriority="high" decoding="async">
+      <div class="rotulo-frasco" aria-label="Rótulo: Botica, café de especialidad. Uso: una taza, sin apuro. Dosis: 18 gramos, 36 mililitros, 28 segundos.">
+        <p class="rf-cab">Botica · San Telmo</p>
+        <p class="rf-tit">Café de especialidad</p>
+        <p>Uso: una taza, sin apuro.</p>
+        <p>Dosis: 18 g · 36 ml · 28 s</p>
+        <p class="rf-pie">Lote N.º 1924</p>
+      </div>
+    </figure>
   </section>
 
-  <div class="cinta" aria-hidden="true">
-    <div class="cinta-pista">
-      <span>Colombia</span><span>Etiopía</span><span>Brasil</span><span>Tostado en el local</span><span>18 g por espresso doble</span>
-      <span>Colombia</span><span>Etiopía</span><span>Brasil</span><span>Tostado en el local</span><span>18 g por espresso doble</span>
-    </div>
-  </div>
+  <div class="azulejos" aria-hidden="true"></div>
 
   <section id="casa" class="seccion">
-    <div class="contenedor">
-      <p class="etiqueta">La casa</p>
-      <h2>Una farmacia de 1924, ahora llena de café</h2>
-      <div class="bento">
-        <div class="tarjeta bento-foto">
-          <img src="img/local-interior.jpg" alt="Interior de la cafetería visto desde arriba, con mesas y estantes de madera" loading="lazy" decoding="async">
-        </div>
-        <div class="tarjeta bento-texto">
-          <p>Cuando encontramos el local, todavía conservaba los estantes de roble, los frascos de vidrio y el mostrador de mármol. Decidimos no tocar casi nada.</p>
-          <p>Donde antes se preparaban jarabes, hoy pesamos granos de Colombia, Etiopía y Brasil. Cada café del menú tiene su receta escrita: gramos, temperatura y tiempo de extracción. Si te interesa, el barista te la explica.</p>
-        </div>
-        <div class="tarjeta dato"><strong>1924</strong><span>Año de la botica original</span></div>
-        <div class="tarjeta dato"><strong>3</strong><span>Orígenes en rotación</span></div>
-        <div class="tarjeta dato dato-acento"><strong>18 g</strong><span>Por cada espresso doble</span></div>
+    <div class="contenedor casa">
+      <figure class="lamina">
+        <img src="img/local-interior.jpg" alt="Interior de la cafetería visto desde arriba, con mesas y estantes de madera" loading="lazy" decoding="async">
+        <figcaption>Lám. I. El salón, visto desde el altillo.</figcaption>
+      </figure>
+      <div class="casa-texto">
+        <p class="rotulo">La casa</p>
+        <h2>Una farmacia de 1924, ahora llena de café</h2>
+        <p class="capitular">Cuando encontramos el local, todavía conservaba los estantes de roble, los frascos de vidrio y el mostrador de mármol. Decidimos no tocar casi nada.</p>
+        <p>Donde antes se preparaban jarabes, hoy pesamos granos de Colombia, Etiopía y Brasil. Cada café del menú tiene su receta escrita: gramos, temperatura y tiempo de extracción. Si te interesa, el barista te la explica.</p>
+        <dl class="ficha">
+          <div><dt>Año de la botica original</dt><dd>1924</dd></div>
+          <div><dt>Orígenes en rotación</dt><dd>3</dd></div>
+          <div><dt>Por cada espresso doble</dt><dd>18 g</dd></div>
+        </dl>
       </div>
     </div>
   </section>
 
-  <section id="recetario" class="seccion seccion-oscura">
+  <section id="recetario" class="seccion recetario">
     <div class="contenedor">
-      <p class="etiqueta">Recetario</p>
-      <h2>Cada preparación con su fórmula</h2>
-      <p class="intro">Los precios incluyen el café o té del día. Preguntá por los orígenes disponibles.</p>
+      <div class="cab-seccion">
+        <div>
+          <p class="rotulo">Recetario</p>
+          <h2>Cada preparación, con su fórmula</h2>
+        </div>
+        <p class="nota">Los precios incluyen el café o té del día. Preguntá por los orígenes disponibles.</p>
+      </div>
       <div class="pestanas" role="tablist" aria-label="Categorías del menú">
         <button role="tab" aria-selected="true" data-cat="cafe">Café</button>
         <button role="tab" aria-selected="false" data-cat="frio">Fríos</button>
         <button role="tab" aria-selected="false" data-cat="pasteleria">Pastelería</button>
       </div>
-      <div class="recetas" id="recetas" role="tabpanel" aria-live="polite"></div>
+      <ol class="formulas" id="recetas" role="tabpanel" aria-live="polite"></ol>
     </div>
   </section>
 
   <section id="galeria" class="seccion">
     <div class="contenedor">
-      <p class="etiqueta">Galería</p>
-      <h2>Un día en la botica</h2>
+      <div class="cab-seccion">
+        <div>
+          <p class="rotulo">Galería</p>
+          <h2>Un día en la botica</h2>
+        </div>
+      </div>
       <div class="galeria">
-        <div class="foto g1"><img src="img/granos-tostado.jpg" alt="Granos de café en una tostadora" loading="lazy" decoding="async"></div>
-        <div class="foto"><img src="img/croissant.jpg" alt="Croissant sobre una tabla de madera" loading="lazy" decoding="async"></div>
-        <div class="foto"><img src="img/cafe-pasteleria.jpg" alt="Dos cafés con leche y una porción de torta sobre una bandeja de madera" loading="lazy" decoding="async"></div>
-        <div class="foto g4"><img src="img/clientes.jpg" alt="Dos personas conversando en una mesa de la cafetería" loading="lazy" decoding="async"></div>
+        <figure class="foto g1"><img src="img/granos-tostado.jpg" alt="Granos de café en una tostadora" loading="lazy" decoding="async"><figcaption>Lám. II. Tostado de la mañana.</figcaption></figure>
+        <figure class="foto g2"><img src="img/croissant.jpg" alt="Croissant sobre una tabla de madera" loading="lazy" decoding="async"><figcaption>Lám. III. Medialuna del día.</figcaption></figure>
+        <figure class="foto g3"><img src="img/cafe-pasteleria.jpg" alt="Dos cafés con leche y una porción de torta sobre una bandeja de madera" loading="lazy" decoding="async"><figcaption>Lám. IV. Cortado y torta.</figcaption></figure>
+        <figure class="foto g4"><img src="img/clientes.jpg" alt="Dos personas conversando en una mesa de la cafetería" loading="lazy" decoding="async"><figcaption>Lám. V. La mesa junto a la ventana.</figcaption></figure>
       </div>
     </div>
   </section>
 
-  <section id="visita" class="seccion">
+  <section id="visita" class="seccion visita-sec">
     <div class="contenedor visita">
       <div class="visita-info">
-        <p class="etiqueta">Visitanos</p>
+        <p class="rotulo">Visitanos</p>
         <h2>Defensa 1180, San Telmo</h2>
         <p>Buenos Aires. A dos cuadras de Plaza Dorrego.</p>
-        <ul class="horarios">
-          <li><span>Lunes a viernes</span><span>8 a 19 h</span></li>
-          <li><span>Sábados</span><span>9 a 20 h</span></li>
-          <li><span>Domingos</span><span>10 a 18 h</span></li>
-        </ul>
+        <dl class="ficha ficha-horarios">
+          <div><dt>Lunes a viernes</dt><dd>8 a 19 h</dd></div>
+          <div><dt>Sábados</dt><dd>9 a 20 h</dd></div>
+          <div><dt>Domingos</dt><dd>10 a 18 h</dd></div>
+        </dl>
         <p>Los domingos hay feria en la calle: conviene reservar mesa.</p>
       </div>
-      <form id="reserva" class="tarjeta" novalidate>
-        <h3>Reservar una mesa</h3>
+      <form id="reserva" class="talonario" novalidate>
+        <p class="tal-cab"><span class="tal-rp" aria-hidden="true">℞</span> Reserva de mesa</p>
         <label for="nombre">Nombre <input id="nombre" type="text" name="nombre" required autocomplete="name"></label>
         <div class="fila">
           <label for="dia">Día <input id="dia" type="date" name="dia" required></label>
@@ -132,12 +148,12 @@
 </main>
 
 <footer class="pie">
-  <div class="contenedor">
-    <p class="pie-marca" aria-hidden="true">Botica</p>
-    <div class="pie-fila">
-      <span>Botica, café de especialidad. Proyecto conceptual.</span>
-      <span>Fotografías: <a href="https://www.pexels.com">Pexels</a> (fotos <a href="https://www.pexels.com/photo/302899/">1</a>, <a href="https://www.pexels.com/photo/2253643/">2</a>, <a href="https://www.pexels.com/photo/894695/">3</a>, <a href="https://www.pexels.com/photo/3892469/">4</a>, <a href="https://www.pexels.com/photo/3020919/">5</a>, <a href="https://www.pexels.com/photo/6205506/">6</a>)</span>
+  <div class="contenedor pie-fila">
+    <div>
+      <p class="pie-logo">Botica</p>
+      <p>Café de especialidad. Proyecto conceptual.</p>
     </div>
+    <p>Fotografías: <a href="https://www.pexels.com">Pexels</a> (fotos <a href="https://www.pexels.com/photo/302899/">1</a>, <a href="https://www.pexels.com/photo/2253643/">2</a>, <a href="https://www.pexels.com/photo/894695/">3</a>, <a href="https://www.pexels.com/photo/3892469/">4</a>, <a href="https://www.pexels.com/photo/3020919/">5</a>, <a href="https://www.pexels.com/photo/6205506/">6</a>)</p>
   </div>
 </footer>
 
