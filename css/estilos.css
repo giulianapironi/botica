@@ -92,6 +92,16 @@ p { margin: 0 0 1rem; }
 .hero-pie { position: relative; z-index: 4; display: flex; align-items: end; justify-content: space-between; gap: 2rem; flex-wrap: wrap; width: min(1240px, 100% - 2.5rem); margin: 2rem auto 0; }
 .bajada { max-width: 34ch; font-size: 1.2rem; font-weight: 500; margin: 0; }
 .acciones { display: flex; gap: .8rem; flex-wrap: wrap; }
+/* Hero con vaso 3D: se oculta la foto y aparece el disco de color */
+.hero-disco { display: none; }
+.hero.con-3d .hero-disco { display: block; position: absolute; z-index: 0; right: clamp(2rem, 7vw, 7rem); top: 6.4rem; width: min(36vw, 520px); aspect-ratio: 1; border-radius: 50%; background: var(--crema); }
+.hero.con-3d .hero-foto { display: none; }
+.hero-3d { position: absolute; inset: 0; width: 100%; height: 100%; z-index: 4; pointer-events: none; }
+.hero.con-3d .s-hero { right: auto; left: clamp(1rem, 4vw, 4rem); top: 7.5rem; }
+@media (max-width: 800px) {
+  .hero.con-3d .hero-disco { width: 47vw; right: 3vw; top: 4.9rem; }
+  .hero.con-3d .s-hero { left: 5vw; top: 6.2rem; }
+}
 @media (max-width: 800px) {
   .hero-foto { right: 6vw; top: 5.4rem; width: 46vw; }
   .titanes { margin-top: 9rem; font-size: clamp(4rem, 21.5vw, 9rem); padding-inline: 1.25rem; }
@@ -223,6 +233,8 @@ input:focus, select:focus { outline: none; box-shadow: 0 0 0 4px var(--rojo); }
   /* Entrada del hero */
   html.anim .ch { transform: translateY(105%); animation: letra .9s cubic-bezier(.3,1.35,.5,1) forwards; animation-delay: calc(.1s + var(--i) * .06s); }
   @keyframes letra { to { transform: none; } }
+  html.anim .hero.con-3d .hero-disco { animation: disco-entra 1s cubic-bezier(.3,1.4,.5,1) .15s both; }
+  @keyframes disco-entra { from { transform: scale(0); } to { transform: none; } }
   html.anim .hero-foto { animation: foto-entra 1.1s cubic-bezier(.3,1.3,.5,1) .35s both; }
   @keyframes foto-entra { from { opacity: 0; transform: translateY(60px) scale(.85); } to { opacity: 1; transform: none; } }
   html.anim .hero .explosion, html.anim .hero .sello-giro { animation-delay: 1s; }
