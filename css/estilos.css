@@ -135,16 +135,18 @@ p { margin: 0 0 1rem; }
 .pestanas button:hover { transform: rotate(-3deg) scale(1.05); }
 .pestanas button[aria-selected="true"] { background: var(--tinta); color: var(--menta); }
 .formulas { list-style: none; margin: 0; padding: 0; }
-.formula { position: relative; display: grid; grid-template-columns: 3rem 1fr auto; align-items: center; gap: 1.5rem; padding: 1.6rem .5rem; border-top: 3px solid var(--tinta); transition: background-color .25s ease, padding-left .3s cubic-bezier(.3,1.4,.5,1); }
+.formula { position: relative; display: grid; grid-template-columns: auto 1fr auto; align-items: center; gap: clamp(1rem, 3vw, 2.2rem); padding: 1.4rem .5rem; border-top: 3px solid var(--tinta); transition: background-color .25s ease, padding-left .3s cubic-bezier(.3,1.4,.5,1); }
 .formula:last-child { border-bottom: 3px solid var(--tinta); }
 .formula:hover { background: var(--crema); padding-left: 1.5rem; }
-.f-num { font-family: var(--mono); font-size: .9rem; }
+.f-num { font-family: var(--mono); font-size: .76rem; text-transform: uppercase; letter-spacing: .12em; margin: 0 0 .25rem; }
+.f-icono { width: clamp(78px, 10vw, 118px); height: auto; aspect-ratio: 1; flex: none; filter: drop-shadow(0 6px 0 rgba(13,31,22,.18)); transition: transform .5s cubic-bezier(.3,1.5,.5,1); }
+.formula:hover .f-icono { transform: scale(1.12); }
 .f-nombre { font-family: var(--display); font-weight: 400; text-transform: uppercase; font-size: clamp(2rem, 5vw, 4rem); line-height: .95; margin: 0 0 .4rem; }
 .f-desc { margin: 0 0 .5rem; max-width: 52ch; }
 .f-dosis { display: inline-block; font-family: var(--mono); font-size: .78rem; border: 1.5px solid var(--tinta); border-radius: 999px; padding: .15rem .8rem; margin: 0; }
 .f-precio { display: grid; place-items: center; width: clamp(92px, 10vw, 118px); aspect-ratio: 1; background: var(--rojo); color: var(--crema); clip-path: var(--estrella); font-family: var(--display); font-size: clamp(1.1rem, 1.8vw, 1.45rem); line-height: 1; text-align: center; rotate: -8deg; transition: transform .4s cubic-bezier(.3,1.6,.5,1); font-variant-numeric: tabular-nums; }
 .formula:hover .f-precio { transform: rotate(14deg) scale(1.12); }
-@media (max-width: 640px) { .formula { grid-template-columns: 1fr auto; } .f-num { display: none; } }
+@media (max-width: 640px) { .formula { grid-template-columns: auto 1fr; } .f-precio { grid-column: 2; justify-self: start; width: 86px; } .f-icono { width: 72px; } }
 
 /* Galería */
 .collage { position: relative; display: grid; grid-template-columns: repeat(12, 1fr); gap: 1.5rem; margin-top: 3rem; align-items: start; }
@@ -195,6 +197,10 @@ input:focus, select:focus { outline: none; box-shadow: 0 0 0 4px var(--rojo); }
 
 /* Movimiento (se omite si el sistema pide reducir movimiento) */
 @media (prefers-reduced-motion: no-preference) {
+  .f-icono { animation: vuelta 14s linear infinite; }
+  .formula:hover .f-icono { animation-duration: 2.6s; }
+  .formula:nth-child(even) .f-icono { animation-direction: reverse; }
+  @keyframes vuelta { to { rotate: 360deg; } }
   .pista { animation: marcha 28s linear infinite; }
   .pista[data-dir="-1"] { animation-direction: reverse; }
   .cinta:hover .pista { animation-play-state: paused; }
