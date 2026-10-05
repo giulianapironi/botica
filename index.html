@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="es">
+<html lang="es" class="intro-bloqueo intro-pausa">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
@@ -9,6 +9,7 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Anton&family=Work+Sans:wght@400;500;600;700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="css/estilos.css">
+<noscript><style>#intro{display:none}html.intro-bloqueo{overflow:auto}</style></noscript>
 </head>
 <body>
 
@@ -20,6 +21,27 @@
     <symbol id="cruz" viewBox="0 0 24 24"><path d="M9 1h6v8h8v6h-8v8H9v-8H1V9h8z"/></symbol>
   </defs>
 </svg>
+
+<!-- PANTALLA DE BIENVENIDA -->
+<div class="intro" id="intro">
+  <div class="intro-fondo" aria-hidden="true">
+    <div class="intro-fila"><span>Recetado ✦ Recetado ✦ Recetado ✦ Recetado ✦ Recetado ✦ Recetado ✦ </span></div>
+    <div class="intro-fila inversa"><span>Café ✦ Café ✦ Café ✦ Café ✦ Café ✦ Café ✦ Café ✦ Café ✦ Café ✦ </span></div>
+    <div class="intro-fila"><span>Botica ✦ Botica ✦ Botica ✦ Botica ✦ Botica ✦ Botica ✦ Botica ✦ </span></div>
+    <div class="intro-fila inversa"><span>1924 ✦ 1924 ✦ 1924 ✦ 1924 ✦ 1924 ✦ 1924 ✦ 1924 ✦ 1924 ✦ 1924 ✦ </span></div>
+  </div>
+  <p class="micro i-tl">Botica</p>
+  <p class="micro i-tr">Est. 1924</p>
+  <p class="micro i-bl">18 g por espresso doble</p>
+  <p class="micro i-br">San Telmo · Buenos Aires</p>
+  <div class="intro-cuenta" aria-live="polite"><span id="intro-cuenta">00</span><small>%</small></div>
+  <div class="intro-cta">
+    <button type="button" class="boton" id="intro-abrir">Destapar el café</button>
+    <p class="micro">Hacé clic o presioná Enter</p>
+  </div>
+  <button type="button" class="intro-saltar" id="intro-saltar">Saltar</button>
+  <div class="intro-onda" id="intro-onda" aria-hidden="true"></div>
+</div>
 
 <!-- HERO -->
 <section class="hero" id="inicio">

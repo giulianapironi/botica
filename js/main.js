@@ -164,3 +164,11 @@ if (window.matchMedia("(prefers-reduced-motion: no-preference)").matches && "Int
   window.addEventListener("resize", mover);
   mover();
 }
+
+// Si por algún motivo la bienvenida 3D no arrancó, se quita para no bloquear la página
+setTimeout(() => {
+  if (!window.BoticaIntro) {
+    document.documentElement.classList.remove("intro-pausa", "intro-bloqueo");
+    const i = document.getElementById("intro"); if (i) i.remove();
+  }
+}, 4000);
