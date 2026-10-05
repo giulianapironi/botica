@@ -4,9 +4,31 @@
   const THREE = window.THREE;
   const hero = document.querySelector(".hero");
   const disco = document.querySelector(".hero-disco");
+  // Respaldo sin 3D: contador, botón para entrar y la misma ola de café
   const sinIntro = () => {
-    document.documentElement.classList.remove("intro-pausa", "intro-bloqueo");
-    const i = document.getElementById("intro"); if (i) i.remove();
+    const html = document.documentElement;
+    const i = document.getElementById("intro");
+    if (!i) { html.classList.remove("intro-pausa", "intro-bloqueo"); return; }
+    const cuenta = document.getElementById("intro-cuenta");
+    const onda = document.getElementById("intro-onda");
+    const ini = performance.now();
+    (function paso() {
+      const k = Math.min((performance.now() - ini) / 1800, 1);
+      if (cuenta) cuenta.textContent = String(Math.round(k * 100)).padStart(2, "0");
+      if (k < 1) requestAnimationFrame(paso); else i.classList.add("listo", "espera");
+    })();
+    let hecho = false;
+    const terminarYa = () => { if (hecho) return; hecho = true; html.classList.remove("intro-pausa", "intro-bloqueo"); i.remove(); window.scrollTo(0, 0); };
+    const entrar = () => {
+      if (hecho || !i.classList.contains("espera") || i.classList.contains("abierto")) return;
+      i.classList.add("abierto");
+      if (onda) { onda.style.left = "50%"; onda.style.top = "50%"; onda.classList.add("crece"); }
+      setTimeout(() => { html.classList.remove("intro-pausa"); i.style.transition = "clip-path .9s cubic-bezier(.65,0,.25,1)"; i.style.clipPath = "circle(0px at 50% 50%)"; }, 800);
+      setTimeout(terminarYa, 1800);
+    };
+    i.addEventListener("click", entrar);
+    const b = document.getElementById("intro-abrir"); if (b) b.addEventListener("click", e => { e.stopPropagation(); entrar(); });
+    const sk = document.getElementById("intro-saltar"); if (sk) sk.addEventListener("click", e => { e.stopPropagation(); terminarYa(); });
   };
   window.BoticaIntro = true;
   if (!THREE || !hero || !disco) { sinIntro(); return; }
@@ -192,10 +214,11 @@
   }
   function saltar() {
     if (fase === "listo") return;
+    tapaGrupo.scale.setScalar(1);
     tapaGrupo.visible = true; tapaGrupo.position.set(0, 0, 0); tapaGrupo.rotation.set(0, 0, 0); tapaGrupo.scale.setScalar(1);
     terminar();
   }
-  if (reducir || !intro) { saltar(); }
+  if (!intro) { saltar(); }
   else {
     botonSaltar && botonSaltar.addEventListener("click", e => { e.stopPropagation(); saltar(); });
     const abrir = () => { if (fase === "espera") { pasar("abriendo"); intro.classList.add("abierto"); } };
@@ -252,7 +275,12 @@
     let destX = P.x * anchoVisible / 2, destY = P.y * ALTO_VISIBLE / 2;
     x = destX; y = destY;
 
-    if (fase === "entrando") {
+    if (fase === "entrando" && reducir) {
+      // versión suave: el vaso aparece creciendo, sin rodar
+      const k = suaviza(tf / .8);
+      escala *= lerp(.7, 1, k); giro = .6; tx = centro.tx;
+      if (tf >= .9) { pasar("espera"); intro && intro.classList.add("espera"); }
+    } else if (fase === "entrando") {
       const rodar = 1.15, enderezar = .75;
       const xIni = -(anchoVisible / 2 + 2.2 * escala);
       if (tf < rodar) {
@@ -269,19 +297,25 @@
       tx = lerp(.16, centro.tx, suave(tf / T.entrar));
       if (tf >= T.entrar) { pasar("espera"); intro && intro.classList.add("espera"); }
     } else if (fase === "espera") {
-      giro += .5 * dt; velGiro = 0; tx = centro.tx;
-      y += Math.sin(tf * 1.8) * .05 * escala;
+      if (!reducir) { giro += .5 * dt; y += Math.sin(tf * 1.8) * .05 * escala; }
+      velGiro = 0; tx = centro.tx;
     } else if (fase === "abriendo") {
       const u = Math.min(tf / T.abrir, 1);
       tx = lerp(centro.tx, .62, suave(u * 2));
-      giro += (.5 + 16 * Math.sin(Math.min(u * 1.6, 1) * Math.PI)) * dt; velGiro = 0;
-      squash = 1 + .06 * Math.sin(Math.min(u * 3, 1) * Math.PI);
-      x += Math.sin(tf * 48) * .012 * escala * (1 - u);
-      // la tapa sale volando
+      velGiro = 0;
+      if (!reducir) {
+        giro += (.5 + 16 * Math.sin(Math.min(u * 1.6, 1) * Math.PI)) * dt;
+        squash = 1 + .06 * Math.sin(Math.min(u * 3, 1) * Math.PI);
+        x += Math.sin(tf * 48) * .012 * escala * (1 - u);
+      }
+      // la tapa sale volando (en la versión suave, sube y desaparece)
       const t = Math.max(tf - .12, 0);
-      tapaGrupo.position.set(1.7 * t, 5.4 * t - 6.2 * t * t, 1.4 * t);
-      tapaGrupo.rotation.set(2.2 * t, 0, -3.4 * t);
-      tapaGrupo.visible = t < 1.05;
+      if (reducir) { tapaGrupo.position.set(0, 2.4 * t, 0); tapaGrupo.rotation.set(0, 0, 0); tapaGrupo.scale.setScalar(Math.max(1 - t * 1.4, .001)); tapaGrupo.visible = t < .7; }
+      else {
+        tapaGrupo.position.set(1.7 * t, 5.4 * t - 6.2 * t * t, 1.4 * t);
+        tapaGrupo.rotation.set(2.2 * t, 0, -3.4 * t);
+        tapaGrupo.visible = t < 1.05;
+      }
       emitirVapor(x, y, ahora, dt);
       if (!ondaLista && tf > .55 && onda) {
         ondaLista = true;
@@ -294,9 +328,10 @@
       const h = poseHero(0);
       destX = lerp(centro.x, h.x, e) * anchoVisible / 2; destY = lerp(centro.y, h.y, e) * ALTO_VISIBLE / 2;
       escala = (lerp(centro.h, h.h, e) * ALTO_VISIBLE) / 2.45;
-      x = destX; y = destY + Math.sin(u * Math.PI) * .35 * escala;
+      x = destX; y = destY + (reducir ? 0 : Math.sin(u * Math.PI) * .35 * escala);
       tx = lerp(.62, .16, e);
-      giro += (.5 + 6 * (1 - u)) * dt; velGiro = 0;
+      if (!reducir) giro += (.5 + 6 * (1 - u)) * dt;
+      velGiro = 0;
       emitirVapor(x, y, ahora, dt);
       if (!irisLista && intro) {
         irisLista = true;
@@ -308,8 +343,7 @@
       }
       if (tf >= T.viaje) terminar();
     } else if (fase === "listo") {
-      giro += velGiro * dt;
-      y += Math.sin(ahora / 1000 * 1.7) * .04 * escala;
+      if (!reducir) { giro += velGiro * dt; y += Math.sin(ahora / 1000 * 1.7) * .04 * escala; }
       const k = Math.min((ahora - tapaVuelta) / 450, 1);
       if (k < 1 && tapaVuelta) { tapaGrupo.visible = true; tapaGrupo.position.set(0, 0, 0); tapaGrupo.rotation.set(0, 0, 0); tapaGrupo.scale.setScalar(Math.max(rebote(k), .001)); }
       else tapaGrupo.scale.setScalar(1);
@@ -319,7 +353,7 @@
     pivote.scale.setScalar(escala * squash);
     inclina.rotation.z = caida;
     inclina.rotation.x = tx;
-    gira.rotation.y = giro + (fase === "listo" ? yScroll * .0042 : 0);
+    gira.rotation.y = giro + (fase === "listo" && !reducir ? yScroll * .0042 : 0);
     sombra.position.set(x, y - 1.32 * escala - salto * .15, -.2);
     sombra.scale.setScalar(escala * 2.2);
     sombra.visible = fase !== "cargando" && !(fase === "entrando" && tf < .7) && fase !== "viaje";
